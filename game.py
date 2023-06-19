@@ -34,6 +34,7 @@ screen = pygame.display.set_mode((800, 400))
 pygame.display.set_caption("Runner")
 clock = pygame.time.Clock()
 test_font = pygame.font.Font("font/Pixeltype.ttf", 50)  # take font type and size
+test_font1 = pygame.font.Font("font/Pixeltype.ttf", 30)  # take font type and size
 game_active = False
 start_time = 0
 score = 0
@@ -48,7 +49,7 @@ player.add(Player())
 obstacles = pygame.sprite.Group()
 
 
-# Dispaly Surfaces:
+# Display Surfaces:
 sky_surface = pygame.image.load(
     "graphics/Sky.png"
 ).convert()  # converts to image that pygame can run easier
@@ -62,8 +63,12 @@ player_stand_rect = player_stand.get_rect(center=(300, 200))
 
 game_title_surface = test_font.render("Pixel Runner", False, (64, 64, 64))
 game_title_rect = game_title_surface.get_rect(center=(400, 75))
-instruction_surf = test_font.render('Press "r" to run', False, (64, 64, 64))
+instruction_surf = test_font1.render('Press "r" to run', False, (64, 64, 64))
+instruction_surf1 = test_font1.render(
+    "Pinch index and thumb fingers to jump", False, (64, 64, 64)
+)
 instruction_rect = instruction_surf.get_rect(midleft=(400, 220))
+instruction_rect1 = instruction_surf1.get_rect(midleft=(400, 250))
 
 
 # Timer
@@ -91,7 +96,7 @@ while True and cap.isOpened():
 
     cv2.imshow("Frame", frame)
 
-    k = cv2.waitKey(1)
+    # k = cv2.waitKey(1)
 
     ingame_music.play(-1)
 
@@ -119,7 +124,7 @@ while True and cap.isOpened():
                 [lmList2[4][0], lmList2[4][1]], [lmList2[8][0], lmList2[8][1]], image
             )
             print(length)
-            if length <= 20:
+            if length <= 17:
                 keyboard.press(Key.space)
             else:
                 keyboard.release(Key.space)
@@ -165,10 +170,13 @@ while True and cap.isOpened():
         if score == 0:
             instruction_rect.midleft = 400, 200
             screen.blit(instruction_surf, instruction_rect)
+            screen.blit(instruction_surf1, instruction_rect1)
         else:
             instruction_rect.midleft = 400, 220
             screen.blit(end_score_surf, end_score_rect)
             screen.blit(instruction_surf, instruction_rect)
+            screen.blit(instruction_surf1, instruction_rect1)
+
         pygame.display.flip()
 
     pygame.display.update()  # updates the display

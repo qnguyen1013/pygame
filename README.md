@@ -1,3 +1,3 @@
 # pygame
 
-# sprite game using pygame, opencv, media pipe
+sprite game using pygame, opencv, media pipe
