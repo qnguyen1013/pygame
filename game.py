@@ -4,6 +4,10 @@ from random import randint, choice
 from Classes.player_class import Player
 from Classes.obstacle_class import Obstacle
 
+import cv2
+from pynput.keyboard import Key, Controller
+from cvzone.HandTrackingModule import HandDetector
+
 
 # Helper Functions
 def display_score():
@@ -64,7 +68,7 @@ instruction_rect = instruction_surf.get_rect(midleft=(400, 220))
 
 # Timer
 obstacle_timer = pygame.USEREVENT + 1
-pygame.time.set_timer(obstacle_timer, 1400)
+pygame.time.set_timer(obstacle_timer, 3000)
 
 snail_animation_timer = pygame.USEREVENT + 2
 pygame.time.set_timer(snail_animation_timer, 500)
@@ -72,21 +76,62 @@ pygame.time.set_timer(snail_animation_timer, 500)
 fly_animation_timer = pygame.USEREVENT + 3
 pygame.time.set_timer(fly_animation_timer, 200)
 
+# Computer Vision variables
+keyboard = Controller()
+cap = cv2.VideoCapture(0)
+detector = HandDetector(detectionCon=0.8, maxHands=1)
 # keep screen open/play game
-while True:
+while True and cap.isOpened():
+    # CV
+    ret, frame = cap.read()
+    height, width, layers = frame.shape
+
+    frame = cv2.resize(frame, (width // 2, height // 2))
+    hands, image = detector.findHands(frame)
+
+    cv2.imshow("Frame", frame)
+
+    k = cv2.waitKey(1)
+
     ingame_music.play(-1)
+
     for event in pygame.event.get():
+        # camera exits when game exits
         if event.type == pygame.QUIT:  # set to the x on the display screen
+            cap.release()
+            cv2.destroyAllWindows()
             pygame.quit()
             exit()  # similar to a break but more secure
 
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_q:
+                cap.release()
+                cv2.destroyAllWindows()
+                pygame.quit()
+                exit()
+
+        if hands:
+            lmList = hands[0]
+
+            lmList2 = lmList["lmList"]
+
+            length, info, image = detector.findDistance(
+                [lmList2[4][0], lmList2[4][1]], [lmList2[8][0], lmList2[8][1]], image
+            )
+            print(length)
+            if length <= 20:
+                keyboard.press(Key.space)
+            else:
+                keyboard.release(Key.space)
+
+        # restarts game
         if not game_active:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r:
-                    # player_rect.left = 80
                     game_active = not game_active
                     start_time = int(pygame.time.get_ticks() / 1000)
 
+        # adds enemies/obstacles
         if game_active:
             if event.type == obstacle_timer:
                 obstacles.add(Obstacle(choice(["fly", "snail", "snail", "snail"])))
@@ -129,4 +174,4 @@ while True:
     pygame.display.update()  # updates the display
 
     # this while true loop should not run faster than 60 times per second (control frame rate) = ceiling
-    clock.tick(60)
+    clock.tick(50)
