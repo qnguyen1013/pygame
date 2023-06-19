@@ -68,7 +68,7 @@ instruction_rect = instruction_surf.get_rect(midleft=(400, 220))
 
 # Timer
 obstacle_timer = pygame.USEREVENT + 1
-pygame.time.set_timer(obstacle_timer, 3000)
+pygame.time.set_timer(obstacle_timer, 2600)
 
 snail_animation_timer = pygame.USEREVENT + 2
 pygame.time.set_timer(snail_animation_timer, 500)
