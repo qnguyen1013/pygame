@@ -39,7 +39,7 @@ game_active = False
 start_time = 0
 score = 0
 ingame_music = pygame.mixer.Sound("audio/music.wav")
-ingame_music.set_volume(0.5)
+ingame_music.set_volume(0.2)
 
 
 # Groups
@@ -123,7 +123,7 @@ while True and cap.isOpened():
             length, info, image = detector.findDistance(
                 [lmList2[4][0], lmList2[4][1]], [lmList2[8][0], lmList2[8][1]], image
             )
-            print(length)
+
             if length <= 17:
                 keyboard.press(Key.space)
             else:
@@ -182,4 +182,4 @@ while True and cap.isOpened():
     pygame.display.update()  # updates the display
 
     # this while true loop should not run faster than 60 times per second (control frame rate) = ceiling
-    clock.tick(50)
+    clock.tick(30)

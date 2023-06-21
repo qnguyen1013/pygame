@@ -22,9 +22,9 @@ class Obstacle(pygame.sprite.Sprite):
             ).convert_alpha()
 
             self.frames = [snail_frame1, snail_frame2]
-            y_pos = 300
+            y_pos = 300 
 
-        self.animation_index = 0
+        self.animation_index = 0 
         self.image = self.frames[self.animation_index]
         self.rect = self.image.get_rect(midbottom=(randint(900, 1100), y_pos))
 
