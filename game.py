@@ -86,7 +86,7 @@ keyboard = Controller()
 cap = cv2.VideoCapture(0)
 detector = HandDetector(detectionCon=0.8, maxHands=1)
 # keep screen open/play game
-while True and cap.isOpened():
+while True:
     # CV
     ret, frame = cap.read()
     height, width, layers = frame.shape
@@ -95,8 +95,6 @@ while True and cap.isOpened():
     hands, image = detector.findHands(frame)
 
     cv2.imshow("Frame", frame)
-
-    # k = cv2.waitKey(1)
 
     ingame_music.play(-1)
 
@@ -108,6 +106,7 @@ while True and cap.isOpened():
             pygame.quit()
             exit()  # similar to a break but more secure
 
+        # can quit game with q key press
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_q:
                 cap.release()
@@ -182,4 +181,4 @@ while True and cap.isOpened():
     pygame.display.update()  # updates the display
 
     # this while true loop should not run faster than 60 times per second (control frame rate) = ceiling
-    clock.tick(30)
+    clock.tick(60)
